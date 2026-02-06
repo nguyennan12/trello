@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Box from '@mui/material/Box'
 import ModeSelect from '~/components/ModeSelect'
 import AppsIcon from '@mui/icons-material/Apps'
@@ -15,9 +16,14 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import Tooltip from '@mui/material/Tooltip'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import Profiles from './Menus/Profiles'
+import SearchIcon from '@mui/icons-material/Search'
+import { InputAdornment } from '@mui/material'
+import ClearIcon from '@mui/icons-material/Clear'
+import AddIcon from '@mui/icons-material/Add';
 
 
 function AppBar() {
+  const [searchValue, setSearchValue] = useState('')
   return (
     <Box px={2} sx={{
       width: '100%',
@@ -40,12 +46,57 @@ function AppBar() {
           <Recent />
           <Starred />
           <Templates />
-          <Button variant="outlined">Create</Button>
+          <Button
+            variant="outlined"
+            sx={{
+              border: 'none',
+              '&:hover': {
+                border: 'none'
+              }
+            }}
+            endIcon={<AddIcon size="small" />}
+          >Create</Button>
         </Box>
 
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <TextField id="outlined-search" label="Search..." type="search" size="small" sx={{ minWidth: '120px', display: { xs: 'none', md: 'flex' } }} />
+        <TextField
+          id="outlined-search"
+          label="Search"
+          type="text"
+          size="small"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon sx={{ color: 'primary.contrastText' }} />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="start">
+                <ClearIcon
+                  sx={{
+                    color: searchValue ? 'primary.contrastText' : 'transparent',
+                    fontSize: '1rem',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => { setSearchValue('') }}
+                />
+              </InputAdornment>
+            )
+          }}
+          sx={{
+            minWidth: '120px',
+            display: { xs: 'none', md: 'flex' },
+            '& input': { color: 'primary.contrastText' },
+            '& label.Mui-focused': { color: 'primary.contrastText' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: 'primary.contrastText' },
+              '&:hover fieldset': { borderColor: 'primary.contrastText' },
+              '&.Mui-focused fieldset': { borderColor: 'primary.contrastText' }
+            }
+          }} />
         <ModeSelect />
         <Tooltip title="Notifications">
           <Badge color="secondary" variant="dot">

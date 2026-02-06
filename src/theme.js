@@ -35,8 +35,7 @@ const theme = extendTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           textTransform: 'none',
-          color: theme.palette.primary.contrastText,
-          borderColor: theme.palette.primary.contrastText
+          color: theme.palette.primary.contrastText
         })
       }
     },
@@ -51,20 +50,20 @@ const theme = extendTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: ({ theme }) => ({
-          color: theme.palette.primary.dark,
+          // color: theme.palette.primary.dark,
           fontSize: '0.875rem',
-          '.MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.primary.contrastText
-          },
-          '&:hover': {
-            '.MuiOutlinedInput-notchedOutline': {
-              borderColor: theme.palette.primary.contrastText
-            }
-          },
+          // '.MuiOutlinedInput-notchedOutline': {
+          //   borderColor: theme.palette.primary.contrastText
+          // },
+          // '&:hover': {
+          //   '.MuiOutlinedInput-notchedOutline': {
+          //     borderColor: theme.palette.primary.contrastText
+          //   }
+          //},
           //khong bold vien khi nhap vao input
-          '& fieldset': {
-            borderWidth: '1px !important'
-          }
+          '& fieldset': { borderWidth: '0.5px !important' },
+          '&:hover fieldset': { borderWidth: '1px !important' },
+          '&.Mui-focused fieldset': { borderWidth: '1px !important' }
         })
       }
     }
