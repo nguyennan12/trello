@@ -24,33 +24,36 @@ function AppBar() {
       height: (theme) => theme.trello.appBarHeight,
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      backgroundColor: 'primary.light',
+      gap: 2
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
 
-        <AppsIcon sx={{ color: 'primary.main' }} />
+        <AppsIcon sx={{ color: 'primary.contrastText' }} />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-          <SvgIcon component={TrelloLogo} inheritViewBox sx={{ color: 'primary.main' }} />
-          <Typography variant="b1" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'primary.main' }}>Trello</Typography>
+          <SvgIcon component={TrelloLogo} fontSize="small" inheritViewBox sx={{ color: 'primary.contrastText' }} />
+          <Typography variant="b1" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'primary.contrastText' }}>Trello</Typography>
+        </Box>
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
+          <WorkSpaces />
+          <Recent />
+          <Starred />
+          <Templates />
+          <Button variant="outlined">Create</Button>
         </Box>
 
-        <WorkSpaces />
-        <Recent />
-        <Starred />
-        <Templates />
-
-        <Button variant="outlined">Create</Button>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <TextField id="outlined-search" label="Search..." type="search" size="small" />
+        <TextField id="outlined-search" label="Search..." type="search" size="small" sx={{ minWidth: '120px', display: { xs: 'none', md: 'flex' } }} />
         <ModeSelect />
         <Tooltip title="Notifications">
           <Badge color="secondary" variant="dot">
-            <NotificationsNoneIcon />
+            <NotificationsNoneIcon sx={{ color: 'primary.contrastText' }} />
           </Badge>
         </Tooltip>
         <Tooltip title="Help">
-          <HelpOutlineIcon />
+          <HelpOutlineIcon sx={{ color: 'primary.contrastText' }} />
         </Tooltip>
         <Profiles />
       </Box>
