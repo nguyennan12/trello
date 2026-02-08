@@ -19,7 +19,7 @@ import Profiles from './Menus/Profiles'
 import SearchIcon from '@mui/icons-material/Search'
 import { InputAdornment } from '@mui/material'
 import ClearIcon from '@mui/icons-material/Clear'
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/Add'
 
 
 function AppBar() {
