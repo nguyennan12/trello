@@ -90,19 +90,19 @@ function BoardBar({ board }) {
           }}
         >
           <Tooltip title="people">
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+            <Avatar alt="Remy Sharp" src="" />
           </Tooltip>
           <Tooltip title="people">
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/3.jpg" />
+            <Avatar alt="Remy Sharp" src="" />
           </Tooltip>
           <Tooltip title="people">
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <Avatar alt="Remy Sharp" src="" />
           </Tooltip>
           <Tooltip title="people">
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/4.jpg" />
+            <Avatar alt="Remy Sharp" src="" />
           </Tooltip>
           <Tooltip title="people">
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/5.jpg" />
+            <Avatar alt="Remy Sharp" src="" />
           </Tooltip>
         </AvatarGroup>
       </Box>
