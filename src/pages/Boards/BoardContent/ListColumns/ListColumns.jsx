@@ -1,17 +1,16 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Columns from './Columns/Columns'
+import Column from './Columns/Column'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 
 
-function ListColumns() {
+function ListColumns({ columns }) {
 
   return (
     <>
-      <Columns />
-      <Columns />
-      <Columns />
-      <Box sx={{
+      {columns?.map(column => <Column key={column._id} column={column} />)}
+
+      < Box sx={{
         minWidth: '200px',
         maxWidth: '200px',
         mx: 2,
@@ -22,7 +21,7 @@ function ListColumns() {
         <Button sx={{ width: '100%', py: 1 }} startIcon={<LibraryAddIcon />}>
           Add new column
         </Button>
-      </Box>
+      </Box >
     </>
 
   )
