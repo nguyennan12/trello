@@ -1,11 +1,12 @@
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
 import { mapOrder } from '~/utils/sorts'
-import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects } from '@dnd-kit/core'
+import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects, closestCorners } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 import { useEffect, useState } from 'react'
 import Column from './ListColumns/Columns/Column'
 import Card from './ListColumns/Columns/ListCards/Card/Card'
+import { cloneDeep } from 'lodash'
 
 
 const ACTIVE_DRAG_ITEM_TYPE = {
@@ -34,16 +35,72 @@ function BoardContent({ board }) {
     setOrderedColumns(mapOrder(board?.columns, board?.columnOrderIds, '_id'))
   }, [board])
 
+  const findColumnByCardId = (cardId) => {
+
+    return orderedColumns.find(column => column?.cards?.map(card => card._id)?.includes(cardId))
+  }
+
   //truoc khi keo set data cua item hien tai dang keo
   const handleDragStart = (event) => {
-    console.log(event)
+    //console.log(event)
     setActiveDragItemId(event?.active?.id)
     setActiveDragItemType(event?.active?.data?.current?.columnId ? ACTIVE_DRAG_ITEM_TYPE.CARD : ACTIVE_DRAG_ITEM_TYPE.COLUMN)
     setActiveDragItemData(event?.active?.data?.current)
   }
-//sau khi keo (tha)
+
+  //trong khi dang keo tha item
+  const handleDragOver = (event) => {
+    //console.log(event)
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) return
+    const { active, over } = event
+    if (!over) return
+
+    const { id: activeDraggingCardId, data: { current: activeDraggingCardData } } = active
+    const { id: overCardId } = over
+
+    //tim 2 colums theo 2 cardId
+    const activeColumn = findColumnByCardId(activeDragItemId)
+    const overColumn = findColumnByCardId(overCardId)
+
+    if (!activeColumn || !overColumn) return
+
+    if (activeColumn._id !== overColumn._id) {
+      setOrderedColumns(prevColumns => {
+        //tim vi tri cua card trong column dich dang keo toi
+        const overCardIndex = overColumn?.cards?.findIndex(card => card._id === overCardId)
+        //console.log(overCardIndex)
+        let newCardIndex
+        const isBelowOverItem = active.rect.current.translated &&
+          active.rect.current.translated.top > over.rect.top + over.rect.height
+        const modifier = isBelowOverItem ? 1 : 0
+
+        newCardIndex = overCardIndex >= 0 ? overCardIndex + modifier : overColumn?.card?.length + 1
+
+        const nextColumns = cloneDeep(prevColumns)
+        const nextAactiveColumn = nextColumns.find(column => column._id === activeColumn._id)
+        const nextOverColumn = nextColumns.find(column => column._id === overColumn._id)
+        if (nextAactiveColumn) {
+          //filter tra ve mang moi khac item ma no loc
+          nextAactiveColumn.cards = nextAactiveColumn.cards.filter(card => card._id !== activeDragItemId)
+          //update lai mang orderIds
+          nextAactiveColumn.cardsOrderIds = nextAactiveColumn.cards.map(card => card._id)
+        }
+        if (nextOverColumn) {
+          nextOverColumn.cards = nextOverColumn.cards.filter(card => card._id !== activeDragItemId)
+          //them card tu nextActive vao vi tri moi o overColumn
+          nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, activeDraggingCardData)
+          //update lai mang orderIds
+          nextOverColumn.cardsOrderIds = nextOverColumn.cards.map(card => card._id)
+        }
+        return nextColumns
+      })
+    }
+  }
+
+  //sau khi keo (tha)
   const handleDragEnd = (event) => {
     //console.log(event)
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) return
     const { active, over } = event
     if (!over) return
     if (active.id !== over.id) {
@@ -69,9 +126,11 @@ function BoardContent({ board }) {
 
   return (
     <DndContext
-      onDragEnd={handleDragEnd}
       sensors={sensors}
+      collisionDetection={closestCorners}
       onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
     >
       <Box sx={{
         width: '100%',

@@ -1,5 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { BorderLeft } from '@mui/icons-material'
 import AttachmentIcon from '@mui/icons-material/Attachment'
 import CommentIcon from '@mui/icons-material/Comment'
 import GroupIcon from '@mui/icons-material/Group'
@@ -21,7 +22,8 @@ function Card({ card }) {
     //touchAction: 'none', danh cho pointerSensor
     transform: CSS.Translate.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : undefined
+    opacity: isDragging ? 0.5 : undefined,
+    borderLeft: isDragging ? '5px solid #ffd800' : undefined
   }
 
   const shouldShowCardActions = () => {
