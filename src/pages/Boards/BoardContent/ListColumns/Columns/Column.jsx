@@ -18,9 +18,8 @@ import Typography from '@mui/material/Typography'
 import React from 'react'
 import ListCards from './ListCards/ListCards'
 import { mapOrder } from '~/utils/sorts'
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { Opacity } from '@mui/icons-material'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 function Column({ column }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({

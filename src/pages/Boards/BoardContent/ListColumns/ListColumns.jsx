@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Column from './Columns/Column'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
-import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 
 
 function ListColumns({ columns }) {
