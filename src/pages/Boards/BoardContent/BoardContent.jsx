@@ -1,12 +1,13 @@
-import Box from '@mui/material/Box'
-import ListColumns from './ListColumns/ListColumns'
-import { mapOrder } from '~/utils/sorts'
-import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, DragOverlay, defaultDropAnimationSideEffects, closestCorners } from '@dnd-kit/core'
+import { DndContext, DragOverlay, MouseSensor, TouchSensor, closestCorners, defaultDropAnimationSideEffects, getFirstCollision, pointerWithin, useSensor, useSensors } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
+import Box from '@mui/material/Box'
+import { cloneDeep, isEmpty } from 'lodash'
 import { useEffect, useState } from 'react'
+import { generatePlaceholderCard } from '~/utils/formatters'
+import { mapOrder } from '~/utils/sorts'
 import Column from './ListColumns/Columns/Column'
 import Card from './ListColumns/Columns/ListCards/Card/Card'
-import { cloneDeep } from 'lodash'
+import ListColumns from './ListColumns/ListColumns'
 
 
 const ACTIVE_DRAG_ITEM_TYPE = {
@@ -62,21 +63,30 @@ function BoardContent({ board }) {
       newCardIndex = overCardIndex >= 0 ? overCardIndex + modifier : overColumn?.cards?.length + 1
 
       const nextColumns = cloneDeep(prevColumns)
-      const nextAactiveColumn = nextColumns.find(column => column._id === activeColumn._id)
+      const nextActiveColumn = nextColumns.find(column => column._id === activeColumn._id)
       const nextOverColumn = nextColumns.find(column => column._id === overColumn._id)
-      if (nextAactiveColumn) {
+      if (nextActiveColumn) {
         //filter tra ve mang moi khac item ma no loc
-        nextAactiveColumn.cards = nextAactiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
+        nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
+        //them placeholder card khi column rong
+        if (isEmpty(nextActiveColumn.cards)) {
+          console.log('card cuoi cung')
+          nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
+          console.log(nextActiveColumn.cards)
+        }
         //update lai mang orderIds
-        nextAactiveColumn.cardOrderIds = nextAactiveColumn.cards.map(card => card._id)
+        nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)
       }
       if (nextOverColumn) {
         nextOverColumn.cards = nextOverColumn.cards.filter(card => card._id !== activeDraggingCardId)
         //them card tu nextActive vao vi tri moi o overColumn
         nextOverColumn.cards = nextOverColumn.cards.toSpliced(newCardIndex, 0, activeDraggingCardData)
+        //xoa cai placeholder neu co it nhat 1 card
+        nextOverColumn.cards = nextOverColumn.cards.filter(card => !card.FE_PlaceholderCard)
         //update lai mang orderIds
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
       }
+      console.log(nextColumns)
       return nextColumns
     })
   }
@@ -185,10 +195,46 @@ function BoardContent({ board }) {
     sideEffects: defaultDropAnimationSideEffects({ styles: { active: { opacity: '0.5' } } })
   }
 
+  const collisionDetectionStrategy = (args) => {
+    // Nếu đang kéo Column thì dùng closestCorners là chuẩn nhất
+    if (activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) {
+      return closestCorners({ ...args })
+    }
+
+    // Tìm các điểm va chạm với con trỏ
+    const pointerCollisions = pointerWithin(args)
+    if (!pointerCollisions?.length) return []
+
+    // Thuật toán phát hiện va chạm sẽ trả về một mảng các va chạm
+    // const collisions = pointerCollisions.length > 0 ? pointerCollisions : rectIntersection(args)
+
+    // Tìm overId đầu tiên
+    let overId = getFirstCollision(pointerCollisions, 'id')
+
+    if (overId) {
+      // Nếu overId là một Column, tìm card cuối cùng của column đó để va chạm
+      const checkColumn = orderedColumns.find(col => col._id === overId)
+      if (checkColumn) {
+        overId = closestCorners({
+          ...args,
+          coordinate: args.pointerCoordinates,
+          intersectingRects: args.droppableRects,
+          droppableContainers: args.droppableContainers.filter(
+            container => container.id !== overId && checkColumn.cardOrderIds.includes(container.id)
+          )
+        })[0]?.id
+      }
+
+      return [{ id: overId }]
+    }
+
+    return []
+  }
+
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCorners}
+      collisionDetection={collisionDetectionStrategy}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}

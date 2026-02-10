@@ -93,6 +93,20 @@ export const mockData = {
           { _id: 'c-27', boardId: 'board-id-01', columnId: 'col-07', title: 'Khởi tạo Repo Github', cover: null, memberIds: [], comments: [], attachments: [] },
           { _id: 'c-28', boardId: 'board-id-01', columnId: 'col-07', title: 'Cài đặt môi trường Dev', cover: null, memberIds: [], comments: [], attachments: [] }
         ]
+      },
+      {
+        _id: 'col-08',
+        boardId: 'board-id-01',
+        title: 'Empty Column',
+        cardOrderIds: ['c-27-placeholder-card'],
+        cards: [
+          {
+            _id: 'c-27-placeholder-card',
+            boardId: 'board-id-01',
+            columnId: 'col-08',
+            FE_PlaceholderCard: true
+          }
+        ]
       }
     ]
   }
