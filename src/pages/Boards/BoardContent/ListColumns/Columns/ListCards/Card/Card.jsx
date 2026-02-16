@@ -37,14 +37,18 @@ function Card({ card }) {
       {...listeners}
       sx={{
         cursor: 'pointer',
-        overflow: 'unset',
-        display: card?.FE_PlaceholderCard ? 'none' : 'block'
+        overflow: 'hidden',
+        display: card?.FE_PlaceholderCard ? 'none' : 'block',
+        width: '100%',
+        minHeight: '40px',
+        boxSizing: 'border-box'
       }}
     >
       {card?.cover && <CardMedia sx={{ height: 140 }} image={card?.cover} />}
 
-      <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
-        <Typography >  {card?.title}  </Typography>
+      <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5, width: '100%' } }}>
+        {console.log(card)}
+        <Typography sx={{ wordBreak: 'break-word' }}>  {card?.title}  </Typography>
       </CardContent>
       {shouldShowCardActions() &&
         <CardActions sx={{ padding: '0 4px 8px 4px' }}>

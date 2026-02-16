@@ -9,7 +9,7 @@ import { fetchBoardDetailsAPI } from '~/apis'
 function Board() {
   const [board, setBoard] = useState(null)
   useEffect(() => {
-    const boardId = '6991ef8dd7faeb55ffc20cf7'
+    const boardId = '6992b5dc4e82c4af8b7adc6b'
     fetchBoardDetailsAPI(boardId).then(board => {
       setBoard(board)
     })

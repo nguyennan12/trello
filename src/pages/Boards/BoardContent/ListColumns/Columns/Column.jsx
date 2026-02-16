@@ -35,7 +35,9 @@ function Column({ column }) {
     opacity: isDragging ? 0.5 : undefined
   }
 
-  const orderedCards = mapOrder(column?.cards, column?.cardOrderIds, '_id')
+  const orderedCards = column?.cardOrderIds?.length
+    ? mapOrder(column?.cards, column?.cardOrderIds, '_id')
+    : (column?.cards || [])
 
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
