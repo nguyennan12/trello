@@ -9,7 +9,7 @@ function ListCards({ cards }) {
         display: 'flex',
         flexDirection: 'column',
         gap: 1,
-        padding: '0 5px',
+        padding: '0 5px 5px 5px',
         margin: '0 5px',
         overflowY: 'auto',
         overflowX: 'hidden',

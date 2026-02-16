@@ -1,3 +1,5 @@
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import AddCardIcon from '@mui/icons-material/AddCard'
 import Cloud from '@mui/icons-material/Cloud'
 import ContentCopy from '@mui/icons-material/ContentCopy'
@@ -13,15 +15,24 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
-import React from 'react'
-import ListCards from './ListCards/ListCards'
+import React, { useState } from 'react'
 import { mapOrder } from '~/utils/sorts'
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
+import ListCards from './ListCards/ListCards'
+import ClearIcon from '@mui/icons-material/Clear'
 
 function Column({ column }) {
+  const [openNewCardForm, setOpenNewCardForm] = useState(false)
+  const toggleOpenNewCardForm = () => setOpenNewCardForm(prev => !prev)
+  const [newCardTitle, setNewCardTitle] = useState('')
+  const addNewCard = () => {
+    if (!newCardTitle) return
+    toggleOpenNewCardForm()
+    setNewCardTitle('')
+  }
+
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
     data: { ...column }
@@ -128,18 +139,55 @@ function Column({ column }) {
 
         </Box>
         <ListCards cards={orderedCards} />
-        <Box sx={{
-          height: (theme) => theme.trello.columnFooterHeight,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          p: 2
-        }}>
-          <Button startIcon={<AddCardIcon />}>Add new card</Button>
-          <Tooltip title="Drag to move">
-            <DragHandleIcon sx={{ color: 'primary.contrastText', cursor: 'pointer' }} />
-          </Tooltip>
-        </Box>
+
+        {!openNewCardForm
+          ? <Box
+            onClick={toggleOpenNewCardForm}
+            sx={{
+              height: (theme) => theme.trello.columnFooterHeight,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              p: 2
+            }}>
+            <Button startIcon={<AddCardIcon />}>Add new card</Button>
+            <Tooltip title="Drag to move">
+              <DragHandleIcon sx={{ color: 'primary.contrastText', cursor: 'pointer' }} />
+            </Tooltip>
+          </Box>
+          : <Box sx={{
+            p: 1,
+            borderRadius: '6px',
+            height: (theme) => theme.trello.columnFooterHeight,
+            bgcolor: 'primary.main',
+            display: 'flex',
+            justifyContent: 'space-between'
+          }}>
+            <TextField
+              label="Enter card title..."
+              type="text"
+              size="small"
+              variant='outlined'
+              autoFocus
+              value={newCardTitle}
+              onChange={(e) => setNewCardTitle(e.target.value)}
+
+              sx={{
+                '& input': { color: 'primary.contrastText' },
+                '& label.Mui-focused': { color: 'primary.contrastText' },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: 'primary.contrastText' },
+                  '&:hover fieldset': { borderColor: 'primary.contrastText' },
+                  '&.Mui-focused fieldset': { borderColor: 'primary.contrastText' }
+                }
+              }} />
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Button onClick={addNewCard} sx={{ bgcolor: 'primary.light', '&:hover': { bgcolor: '#56a50c', color: '#ffffff' } }}>Add</Button>
+              <ClearIcon size='small' sx={{ color: 'primary.contrastText', cursor: 'pointer', '&:hover': { color: '#bd0303' } }} onClick={toggleOpenNewCardForm} />
+            </Box>
+          </Box>
+        }
+
       </Box>
     </div>
 

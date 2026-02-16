@@ -74,7 +74,7 @@ function AppBar() {
               </InputAdornment>
             ),
             endAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position="end">
                 <ClearIcon
                   sx={{
                     color: searchValue ? 'primary.contrastText' : 'transparent',

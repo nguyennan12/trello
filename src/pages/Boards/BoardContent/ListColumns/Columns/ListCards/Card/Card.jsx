@@ -23,7 +23,7 @@ function Card({ card }) {
     transform: CSS.Translate.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : undefined,
-    borderLeft: isDragging ? '5px solid #ffd800' : undefined
+    borderLeft: isDragging ? '5px solid #ffd800' : undefined,
   }
 
   const shouldShowCardActions = () => {
@@ -37,17 +37,17 @@ function Card({ card }) {
       {...listeners}
       sx={{
         cursor: 'pointer',
-        overflow: 'hidden',
+        overflow: 'unset',
         display: card?.FE_PlaceholderCard ? 'none' : 'block',
         width: '100%',
-        minHeight: '40px',
-        boxSizing: 'border-box'
+        border: '2px solid transparent',
+        '&:hover': { borderColor: (theme) => theme.palette.primary.dark }
       }}
     >
       {card?.cover && <CardMedia sx={{ height: 140 }} image={card?.cover} />}
 
       <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5, width: '100%' } }}>
-        {console.log(card)}
+
         <Typography sx={{ wordBreak: 'break-word' }}>  {card?.title}  </Typography>
       </CardContent>
       {shouldShowCardActions() &&
