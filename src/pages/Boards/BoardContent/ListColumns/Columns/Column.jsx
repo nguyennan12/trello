@@ -22,15 +22,20 @@ import React, { useState } from 'react'
 import { mapOrder } from '~/utils/sorts'
 import ListCards from './ListCards/ListCards'
 import ClearIcon from '@mui/icons-material/Clear'
+import { toast } from 'react-toastify'
 
 function Column({ column }) {
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(prev => !prev)
   const [newCardTitle, setNewCardTitle] = useState('')
   const addNewCard = () => {
-    if (!newCardTitle) return
+    if (!newCardTitle) {
+      toast.error('Please enter Card Title', { position: "bottom-right" })
+      return
+    }
     toggleOpenNewCardForm()
     setNewCardTitle('')
+    toast.success('New card created', { position: "bottom-right" })
   }
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({

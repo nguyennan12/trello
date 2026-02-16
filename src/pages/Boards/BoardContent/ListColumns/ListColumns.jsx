@@ -6,18 +6,21 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 import Column from './Columns/Column'
-
+import { toast } from 'react-toastify'
 
 function ListColumns({ columns }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(prev => !prev)
   const [newColumnTitle, setNewColumnTitle] = useState('')
   const addNewColumn = () => {
-    if (!newColumnTitle) return
-    console.log(newColumnTitle)
-
+    if (!newColumnTitle) {
+      toast.error('Please enter Column Title', { position: "bottom-left", })
+      return
+    }
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
+    toast.success('New column created', { position: "bottom-left" })
+
   }
   return (
     <>
