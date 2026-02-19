@@ -8,11 +8,11 @@ import { ToastContainer } from 'react-toastify'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <CssVarsProvider theme={theme}>
-      <CssBaseline />
-      <App />
-      <ToastContainer autoClose={2000} theme="colored" />
-    </CssVarsProvider>
-  </React.StrictMode>
+
+  <CssVarsProvider theme={theme}>
+    <CssBaseline />
+    <App />
+    <ToastContainer autoClose={2000} theme="colored" />
+  </CssVarsProvider>
+
 )

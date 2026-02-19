@@ -3,20 +3,33 @@ import AppBar from '~/components/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { mockData } from '~/apis/mock_data'
+import { mapOrder } from '~/utils/sorts'
 import { useEffect, useState } from 'react'
-import { fetchBoardDetailsAPI, createNewColumnAPI, createNewCardAPI, updateBoardDetailsAPI } from '~/apis'
+import {
+  fetchBoardDetailsAPI,
+  createNewColumnAPI,
+  createNewCardAPI,
+  updateBoardDetailsAPI,
+  updateColumnDetailsAPI
+} from '~/apis'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { isEmpty } from 'lodash'
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box'
 
 function Board() {
   const [board, setBoard] = useState(null)
   useEffect(() => {
     const boardId = '6996ca0e116a30c4d2227ced'
     fetchBoardDetailsAPI(boardId).then(board => {
+      board.columns = mapOrder(board.columns, board.columnOrderIds, '_id')
+
       board.columns.forEach(column => {
         if (isEmpty(column.cards)) {
           column.cards = [generatePlaceholderCard(column)]
           column.cardOrderIds = [generatePlaceholderCard(column)._id]
+        } else {
+          column.cards = mapOrder(column.cards, column.cardOrderIds, '_id')
         }
       })
       setBoard(board)
@@ -63,6 +76,25 @@ function Board() {
     })
   }
 
+  const moveCardInTheSameColumn = (dndOrderedCards, dndOrderedCardIds, columnId) => {
+    const newBoard = { ...board }
+    const ColumnToUpdate = newBoard.columns.find(column => column._id === columnId)
+    if (ColumnToUpdate) {
+      ColumnToUpdate.cards = dndOrderedCards
+      ColumnToUpdate.cardOrderIds = dndOrderedCardIds
+    }
+    setBoard(newBoard)
+
+    updateColumnDetailsAPI(columnId, { cardOrderIds: dndOrderedCardIds })
+
+  }
+  if (!board) {
+    return (
+      <Box sx={{ witdh: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
 
@@ -72,7 +104,8 @@ function Board() {
         board={board}
         createNewColumn={createNewColumn}
         createNewCard={createNewCard}
-        moveColumns={moveColumns} />
+        moveColumns={moveColumns}
+        moveCardInTheSameColumn={moveCardInTheSameColumn} />
     </Container>
   )
 }
