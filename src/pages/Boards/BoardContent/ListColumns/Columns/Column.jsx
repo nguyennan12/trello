@@ -24,15 +24,22 @@ import ListCards from './ListCards/ListCards'
 import ClearIcon from '@mui/icons-material/Clear'
 import { toast } from 'react-toastify'
 
-function Column({ column }) {
+function Column({ column, createNewCard }) {
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(prev => !prev)
   const [newCardTitle, setNewCardTitle] = useState('')
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardTitle) {
       toast.error('Please enter Card Title', { position: "bottom-right" })
       return
     }
+    const newCard = {
+      title: newCardTitle,
+      columnId: column._id
+    }
+
+    await createNewCard(newCard)
+
     toggleOpenNewCardForm()
     setNewCardTitle('')
     toast.success('New card created', { position: "bottom-right" })

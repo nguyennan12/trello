@@ -14,7 +14,7 @@ const ACTIVE_DRAG_ITEM_TYPE = {
   COLUMN: 'ACTIVE_DRAG_ITEM_TYPE_COLUMN',
   CARD: 'ACTIVE_DRAG_ITEM_TYPE_CARD'
 }
-function BoardContent({ board }) {
+function BoardContent({ board, createNewColumn, createNewCard }) {
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 10 } })
   const touchSensor = useSensor(TouchSensor, {
@@ -70,9 +70,9 @@ function BoardContent({ board }) {
         nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
         //them placeholder card khi column rong
         if (isEmpty(nextActiveColumn.cards)) {
-          console.log('card cuoi cung')
+        
           nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
-          console.log(nextActiveColumn.cards)
+          // console.log(nextActiveColumn.cards)
         }
         //update lai mang orderIds
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)
@@ -86,7 +86,7 @@ function BoardContent({ board }) {
         //update lai mang orderIds
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
       }
-      console.log(nextColumns)
+      // console.log(nextColumns)
       return nextColumns
     })
   }
@@ -250,7 +250,7 @@ function BoardContent({ board }) {
           display: 'none'
         }
       }}>
-        <ListColumns columns={orderedColumns} />
+        <ListColumns columns={orderedColumns} createNewColumn={createNewColumn} createNewCard={createNewCard} />
         <DragOverlay dropAnimation={dropAnimation}>
           {/* {(!activeDragItemType) && null}
           {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData} />}

@@ -8,15 +8,22 @@ import { useState } from 'react'
 import Column from './Columns/Column'
 import { toast } from 'react-toastify'
 
-function ListColumns({ columns }) {
+function ListColumns({ columns, createNewColumn, createNewCard }) {
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(prev => !prev)
   const [newColumnTitle, setNewColumnTitle] = useState('')
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter Column Title', { position: "bottom-left", })
       return
     }
+
+    const newColumn = {
+      title: newColumnTitle
+    }
+
+    await createNewColumn(newColumn)
+
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
     toast.success('New column created', { position: "bottom-left" })
@@ -25,7 +32,7 @@ function ListColumns({ columns }) {
   return (
     <>
       < SortableContext items={columns.map(c => c._id)} strategy={horizontalListSortingStrategy} >
-        {columns?.map(column => <Column key={column._id} column={column} />)}
+        {columns?.map(column => <Column key={column._id} column={column} createNewCard={createNewCard} />)}
 
         {!openNewColumnForm
           ? < Box onClick={toggleOpenNewColumnForm} sx={{

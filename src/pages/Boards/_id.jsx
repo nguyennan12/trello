@@ -4,22 +4,59 @@ import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 import { mockData } from '~/apis/mock_data'
 import { useEffect, useState } from 'react'
-import { fetchBoardDetailsAPI } from '~/apis'
+import { fetchBoardDetailsAPI, createNewColumnAPI, createNewCardAPI } from '~/apis'
+import { generatePlaceholderCard } from '~/utils/formatters'
+import { isEmpty } from 'lodash'
 
 function Board() {
   const [board, setBoard] = useState(null)
   useEffect(() => {
-    const boardId = '6992b5dc4e82c4af8b7adc6b'
+    const boardId = '6996ca0e116a30c4d2227ced'
     fetchBoardDetailsAPI(boardId).then(board => {
+      board.columns.forEach(column => {
+        if (isEmpty(column.cards)) {
+          column.cards = [generatePlaceholderCard(column)]
+          column.cardOrderIds = [generatePlaceholderCard(column)._id]
+        }
+      })
       setBoard(board)
     })
   }, [])
+
+  const createNewColumn = async (newColumn) => {
+    const createdColumn = await createNewColumnAPI({
+      ...newColumn,
+      boardId: board._id
+    })
+    createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+    const newBoard = { ...board }
+    newBoard.columns.push(createdColumn)
+    newBoard.columnOrderIds.push(createdColumn._id)
+    setBoard(newBoard)
+  }
+
+  const createNewCard = async (newCard) => {
+    const createdCard = await createNewCardAPI({
+      ...newCard,
+      boardId: board._id
+    })
+
+    const newBoard = { ...board }
+    const ColumnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
+    if (ColumnToUpdate) {
+      ColumnToUpdate.cards.push(createdCard)
+      ColumnToUpdate.cardOrderIds.push(createdCard._id)
+    }
+    setBoard(newBoard)
+  }
+
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
 
       <AppBar />
-      <BoardBar board={mockData?.board} />
-      <BoardContent board={mockData?.board} />
+      <BoardBar board={board} />
+      <BoardContent board={board} createNewColumn={createNewColumn} createNewCard={createNewCard} />
     </Container>
   )
 }
