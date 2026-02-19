@@ -7,7 +7,11 @@ export const fetchBoardDetailsAPI = async (boardId) => {
   const response = await axios.get(`${API_ROOT}/v1/boards/${boardId}`)
   return response.data
 }
-
+/*PUT board*/
+export const updateBoardDetailsAPI = async (boardId, updateData) => {
+  const response = await axios.put(`${API_ROOT}/v1/boards/${boardId}`, updateData)
+  return response.data
+}
 /*POST column*/
 export const createNewColumnAPI = async (newColumn) => {
   const response = await axios.post(`${API_ROOT}/v1/columns`, newColumn)
@@ -18,3 +22,5 @@ export const createNewCardAPI = async (newCard) => {
   const response = await axios.post(`${API_ROOT}/v1/cards`, newCard)
   return response.data
 }
+
+
