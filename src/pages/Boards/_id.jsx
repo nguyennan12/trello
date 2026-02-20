@@ -5,13 +5,15 @@ import BoardContent from './BoardContent/BoardContent'
 import { mockData } from '~/apis/mock_data'
 import { mapOrder } from '~/utils/sorts'
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import {
   fetchBoardDetailsAPI,
   createNewColumnAPI,
   createNewCardAPI,
   updateBoardDetailsAPI,
   updateColumnDetailsAPI,
-  moveCardToDifferentColumnAPI
+  moveCardToDifferentColumnAPI,
+  deleteColumnDetailsAPI
 } from '~/apis'
 import { generatePlaceholderCard } from '~/utils/formatters'
 import { isEmpty } from 'lodash'
@@ -116,6 +118,16 @@ function Board() {
     })
   }
 
+  const deleteColumnDetails = (columnId) => {
+    const newBoard = { ...board }
+    newBoard.columns = newBoard.columns.filter(column => column._id !== columnId)
+    newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== columnId)
+    setBoard(newBoard)
+    deleteColumnDetailsAPI(columnId).then(res => {
+      toast.success(res?.deleteResult, { position: "bottom-left" })
+    })
+  }
+
   if (!board) {
     return (
       <Box sx={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -134,7 +146,9 @@ function Board() {
         createNewCard={createNewCard}
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
-        moveCardToDifferentColumn={moveCardToDifferentColumn} />
+        moveCardToDifferentColumn={moveCardToDifferentColumn}
+        deleteColumnDetails={deleteColumnDetails}
+      />
     </Container>
   )
 }
