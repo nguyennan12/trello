@@ -1,6 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import AddCardIcon from '@mui/icons-material/AddCard'
+import ClearIcon from '@mui/icons-material/Clear'
 import Cloud from '@mui/icons-material/Cloud'
 import ContentCopy from '@mui/icons-material/ContentCopy'
 import ContentCut from '@mui/icons-material/ContentCut'
@@ -18,20 +19,34 @@ import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
-import React, { useState } from 'react'
-import { mapOrder } from '~/utils/sorts'
-import ListCards from './ListCards/ListCards'
-import ClearIcon from '@mui/icons-material/Clear'
-import { toast } from 'react-toastify'
+import { cloneDeep } from 'lodash'
 import { useConfirm } from 'material-ui-confirm'
+import React, { useState } from 'react'
+import { toast } from 'react-toastify'
+import ListCards from './ListCards/ListCards'
 
-function Column({ column, createNewCard, deleteColumnDetails }) {
+import {
+  createNewCardAPI,
+  deleteColumnDetailsAPI
+} from '~/apis'
+
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  selectCurrentActiveBoard,
+  updateCurrentActiveBoard
+} from '~/redux/activeBoard/activeBoardSlice'
+
+
+function Column({ column }) {
+  const dispatch = useDispatch()
+  const board = useSelector(selectCurrentActiveBoard)
+
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(prev => !prev)
   const [newCardTitle, setNewCardTitle] = useState('')
   const addNewCard = async () => {
     if (!newCardTitle) {
-      toast.error('Please enter Card Title', { position: "bottom-right" })
+      toast.error('Please enter Card Title', { position: 'bottom-right' })
       return
     }
     const newCard = {
@@ -39,11 +54,30 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       columnId: column._id
     }
 
-    await createNewCard(newCard)
+    //Goi API tao moi card
+    const createdCard = await createNewCardAPI({
+      ...newCard,
+      boardId: board._id
+    })
+
+    const newBoard = cloneDeep(board)
+    const ColumnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
+    if (ColumnToUpdate) {
+      if (ColumnToUpdate.cards.some(card => card.FE_PlaceholderCard)) {
+        ColumnToUpdate.cards = [createdCard]
+        ColumnToUpdate.cardOrderIds = [createdCard._id]
+      } else {
+        ColumnToUpdate.cards.push(createdCard)
+        ColumnToUpdate.cardOrderIds.push(createdCard._id)
+      }
+
+    }
+    //setBoard(newBoard)
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     toggleOpenNewCardForm()
     setNewCardTitle('')
-    toast.success('New card created', { position: "bottom-right" })
+    toast.success('New card created', { position: 'bottom-right' })
   }
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -69,17 +103,26 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
   const handleClose = () => {
     setAnchorEl(null)
   }
-  
+
   const confirmDeleteColumn = useConfirm()
   const handleDeleteColumn = async () => {
-    const { confirmed, reason } = await confirmDeleteColumn({
-      title: "Delete Column?",
-      description: "This action will permanently delete your Column and its Cards! Are you sure?",
+    const { confirmed } = await confirmDeleteColumn({
+      title: 'Delete Column?',
+      description: 'This action will permanently delete your Column and its Cards! Are you sure?',
       allowClose: false
-    });
+    })
 
     if (confirmed) {
-      deleteColumnDetails(column._id)
+
+      const newBoard = { ...board }
+      newBoard.columns = newBoard.columns.filter(col => col._id !== column._id)
+      newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== column._id)
+      //setBoard(newBoard)
+      dispatch(updateCurrentActiveBoard(newBoard))
+
+      deleteColumnDetailsAPI(column._id).then(res => {
+        toast.success(res?.deleteResult, { position: 'bottom-left' })
+      })
     }
   }
 

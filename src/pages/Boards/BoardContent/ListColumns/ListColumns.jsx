@@ -4,17 +4,36 @@ import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
+import { cloneDeep } from 'lodash'
 import { useState } from 'react'
-import Column from './Columns/Column'
 import { toast } from 'react-toastify'
+import Column from './Columns/Column'
 
-function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetails }) {
+
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  selectCurrentActiveBoard,
+  updateCurrentActiveBoard
+} from '~/redux/activeBoard/activeBoardSlice'
+
+import {
+  createNewColumnAPI
+} from '~/apis'
+
+
+import { generatePlaceholderCard } from '~/utils/formatters'
+
+
+function ListColumns({ columns }) {
+  const dispatch = useDispatch()
+  const board = useSelector(selectCurrentActiveBoard)
+
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(prev => !prev)
   const [newColumnTitle, setNewColumnTitle] = useState('')
   const addNewColumn = async () => {
     if (!newColumnTitle) {
-      toast.error('Please enter Column Title', { position: "bottom-left", })
+      toast.error('Please enter Column Title', { position: 'bottom-left' })
       return
     }
 
@@ -22,17 +41,31 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
       title: newColumnTitle
     }
 
-    await createNewColumn(newColumn)
+    //gọi API tạo mới column
+    const createdColumn = await createNewColumnAPI({
+      ...newColumn,
+      boardId: board._id
+    })
+    createdColumn.cards = [generatePlaceholderCard(createdColumn)]
+    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+
+    //Redux k cho phép chỉnh sửa dữ liệu trực tiếp (Immutability) phải cloneDeep
+    // const newBoard = { ...board } này là clone Shallow
+    const newBoard = cloneDeep(board)
+    newBoard.columns.push(createdColumn)
+    newBoard.columnOrderIds.push(createdColumn._id)
+
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
-    toast.success('New column created', { position: "bottom-left" })
+    toast.success('New column created', { position: 'bottom-left' })
 
   }
   return (
     <>
       < SortableContext items={columns.map(c => c._id)} strategy={horizontalListSortingStrategy} >
-        {columns?.map(column => <Column key={column._id} column={column} createNewCard={createNewCard} deleteColumnDetails={deleteColumnDetails} />)}
+        {columns?.map(column => <Column key={column._id} column={column} />)}
 
         {!openNewColumnForm
           ? < Box onClick={toggleOpenNewColumnForm} sx={{
