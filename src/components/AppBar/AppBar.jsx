@@ -6,6 +6,7 @@ import { ReactComponent as TrelloLogo } from '~/assets/trello.svg'
 import SvgIcon from '@mui/material/SvgIcon'
 import Typography from '@mui/material/Typography'
 import WorkSpaces from './Menus/WorkSpaces'
+
 import Recent from './Menus/Recent'
 import Starred from './Menus/Starred'
 import Templates from './Menus/Templates'
