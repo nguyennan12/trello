@@ -59,8 +59,14 @@ function Board() {
     const newBoard = { ...board }
     const ColumnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
     if (ColumnToUpdate) {
-      ColumnToUpdate.cards.push(createdCard)
-      ColumnToUpdate.cardOrderIds.push(createdCard._id)
+      if (ColumnToUpdate.cards.some(card => card.FE_PlaceholderCard)) {
+        ColumnToUpdate.cards = [createdCard]
+        ColumnToUpdate.cardOrderIds = [createdCard._id]
+      } else {
+        ColumnToUpdate.cards.push(createdCard)
+        ColumnToUpdate.cardOrderIds.push(createdCard._id)
+      }
+
     }
     setBoard(newBoard)
   }
@@ -91,17 +97,20 @@ function Board() {
   }
 
   const moveCardToDifferentColumn = (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
-    console.log('dndOrderedColumns:', dndOrderedColumns)
+
     const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
     const newBoard = { ...board }
     newBoard.columns = dndOrderedColumns
     newBoard.columnOrderIds = dndOrderedColumnsIds
     setBoard(newBoard)
 
+    let prevCardOrderIds = dndOrderedColumns.find(column => column._id === prevColumnId)?.cardOrderIds
+    if (prevCardOrderIds[0].includes('placeholder-card')) prevCardOrderIds = []
+
     moveCardToDifferentColumnAPI({
       currentCardId,
       prevColumnId,
-      prevCardOrderIds: dndOrderedColumns.find(column => column._id === prevColumnId)?.cardOrderIds,
+      prevCardOrderIds,
       nextColumnId,
       nextCardOrderIds: dndOrderedColumns.find(column => column._id === nextColumnId)?.cardOrderIds
     })
