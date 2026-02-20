@@ -12,7 +12,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import React from 'react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-
+import { capitalizeFirstLetter } from '~/utils/formatters'
 
 function WorkSpaces() {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -33,7 +33,7 @@ function WorkSpaces() {
         onClick={handleClick}
         endIcon={<ExpandMoreIcon />}
       >
-        Workspaces
+        {capitalizeFirstLetter('WorkSpaces')}
       </Button>
       <Menu
         id="basic-menu-workspaces"
