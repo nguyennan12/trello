@@ -111,7 +111,7 @@ function ListColumns({ columns }) {
                 }
               }} />
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Button onClick={addNewColumn} sx={{ bgcolor: 'primary.light', px: 1.25, '&:hover': { bgcolor: '#56a50c', color: '#ffffff' } }}>Add Column</Button>
+              <Button className='interceptor-loading' onClick={addNewColumn} sx={{ bgcolor: 'primary.light', px: 1.25, '&:hover': { bgcolor: '#56a50c', color: '#ffffff' } }}>Add Column</Button>
               <ClearIcon size='small' sx={{ color: 'primary.contrastText', cursor: 'pointer', '&:hover': { color: '#bd0303' } }} onClick={toggleOpenNewColumnForm} />
             </Box>
           </Box>

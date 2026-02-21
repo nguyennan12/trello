@@ -266,7 +266,7 @@ function Column({ column }) {
                 }
               }} />
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Button onClick={addNewCard} sx={{ bgcolor: 'primary.light', '&:hover': { bgcolor: '#56a50c', color: '#ffffff' } }}>Add</Button>
+              <Button className='interceptor-loading' onClick={addNewCard} sx={{ bgcolor: 'primary.light', '&:hover': { bgcolor: '#56a50c', color: '#ffffff' } }}>Add</Button>
               <ClearIcon size='small' sx={{ color: 'primary.contrastText', cursor: 'pointer', '&:hover': { color: '#bd0303' } }} onClick={toggleOpenNewCardForm} />
             </Box>
           </Box>
