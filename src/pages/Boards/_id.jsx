@@ -21,16 +21,20 @@ import {
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 
+import { useParams } from 'react-router-dom'
+
 function Board() {
   const dispatch = useDispatch()
   const board = useSelector(selectCurrentActiveBoard)
 
+  const { boardId } = useParams()
+
   // const [board, setBoard] = useState(null)
   useEffect(() => {
-    const boardId = '6996ca0e116a30c4d2227ced'
+    // const boardId = '6996ca0e116a30c4d2227ced'
     //call API
     dispatch(fetchBoardDetailsAPI(boardId))
-  }, [dispatch])
+  }, [dispatch, boardId])
 
   const moveColumns = (dndOrderedColumns) => {
     const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
