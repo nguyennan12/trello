@@ -2,6 +2,7 @@ import Container from '@mui/material/Container'
 import { cloneDeep } from 'lodash'
 import { useEffect } from 'react'
 import AppBar from '~/components/AppBar/AppBar'
+import PageLoadingSpinner from '~/components/Loading/PageLoadingSpinner'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
 
@@ -18,8 +19,6 @@ import {
   updateCurrentActiveBoard
 } from '~/redux/activeBoard/activeBoardSlice'
 
-import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
 
 import { useParams } from 'react-router-dom'
 
@@ -87,9 +86,7 @@ function Board() {
 
   if (!board) {
     return (
-      <Box sx={{ width: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <CircularProgress />
-      </Box>
+      <PageLoadingSpinner />
     )
   }
   return (
