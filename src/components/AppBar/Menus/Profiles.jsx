@@ -10,8 +10,9 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Tooltip from '@mui/material/Tooltip'
 import React from 'react'
-
-
+import { useSelector, useDispatch } from 'react-redux'
+import { selectCurrentUser, logoutUserAPI } from '~/redux/user/userSlice'
+import { useConfirm } from 'material-ui-confirm'
 
 function Profiles() {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -21,6 +22,20 @@ function Profiles() {
   }
   const handleClose = () => {
     setAnchorEl(null)
+  }
+
+  const dispatch = useDispatch()
+  const currentUser = useSelector(selectCurrentUser)
+  const confirmLogout = useConfirm()
+
+  const handleLogout = async () => {
+    const { confirmed } = await confirmLogout({
+      title: 'Log out of your account?',
+      allowClose: false
+    })
+    if (confirmed) {
+      dispatch(logoutUserAPI())
+    }
   }
   return (
     <Box>
@@ -33,7 +48,7 @@ function Profiles() {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
         >
-          <Avatar sx={{ width: 30, height: 30 }} src="" alt="avatar user" />
+          <Avatar sx={{ width: 30, height: 30 }} src={currentUser?.avatar} alt="avatar user" />
         </IconButton>
       </Tooltip>
 
@@ -42,15 +57,13 @@ function Profiles() {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
+        onClick={handleClose}
         MenuListProps={{
           'aria-labelledby': 'basic-button-recent'
         }}
       >
         <MenuItem>
-          <Avatar sx={{ width: '28px', height: '28px', mr: 2 }} /> Profile
-        </MenuItem>
-        <MenuItem>
-          <Avatar sx={{ width: '28px', height: '28px', mr: 2 }} /> My account
+          <Avatar src={currentUser?.avatar} sx={{ width: '28px', height: '28px', mr: 2 }} /> Profile
         </MenuItem>
         <Divider />
         <MenuItem>
@@ -65,7 +78,7 @@ function Profiles() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

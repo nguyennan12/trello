@@ -16,7 +16,7 @@ function Auth() {
   const currentUser = useSelector(selectCurrentUser)
 
   if (currentUser) {
-    <Navigate to='/' replace={true} />
+    return <Navigate to='/' replace={true} />
   }
 
   return (

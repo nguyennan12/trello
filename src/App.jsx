@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '~/redux/user/userSlice'
 
 const ProtectedRoute = ({ user }) => {
-  if (!user) return <Navigate to='/' replace={true} />
+  if (!user) return <Navigate to='/login' replace={true} />
   return <Outlet />
 }
 
