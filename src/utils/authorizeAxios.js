@@ -4,7 +4,6 @@ import { interceptorLoadingElements } from './formatters'
 import { refreshTokenAPI } from '~/apis'
 import { logoutUserAPI } from '~/redux/user/userSlice'
 
-
 let axiosReduxStore
 export const injectStore = mainStore => { axiosReduxStore = mainStore }
 
