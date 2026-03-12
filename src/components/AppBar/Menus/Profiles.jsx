@@ -13,6 +13,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { selectCurrentUser, logoutUserAPI } from '~/redux/user/userSlice'
 import { useConfirm } from 'material-ui-confirm'
+import { Link } from 'react-router-dom'
 
 function Profiles() {
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -62,9 +63,13 @@ function Profiles() {
           'aria-labelledby': 'basic-button-recent'
         }}
       >
-        <MenuItem>
-          <Avatar src={currentUser?.avatar} sx={{ width: '28px', height: '28px', mr: 2 }} /> Profile
-        </MenuItem>
+
+        <Link to="/settings/account" style={{ color: 'inherit' }}>
+          <MenuItem>
+            <Avatar src={currentUser?.avatar} sx={{ width: '28px', height: '28px', mr: 2 }} /> Profile
+          </MenuItem>
+        </Link>
+
         <Divider />
         <MenuItem>
           <ListItemIcon>
