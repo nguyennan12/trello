@@ -22,6 +22,7 @@ import { DEFAULT_PAGE, DEFAULT_ITEMS_PER_PAGE } from '~/utils/constants'
 
 import Grid from '@mui/material/Grid'
 import { fetchBoardsAPI } from '~/apis'
+import { useQuery } from '@tanstack/react-query'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -41,21 +42,19 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 }))
 
 function Boards() {
-  const [boards, setBoards] = useState(null)
-  const [totalBoards, setTotalBoards] = useState(null)
-
   const location = useLocation()
   const query = new URLSearchParams(location.search)
   const page = parseInt(query.get('page') || '1', 10)
 
-  useEffect(() => {
-    fetchBoardsAPI(location.search).then(res => {
-      setBoards(res.boards || [])
-      setTotalBoards(res.totalBoards || 0)
-    })
-  }, [location.search])
+  const { data, isLoading } = useQuery({
+    queryKey: ['boards', page],
+    queryFn: () => fetchBoardsAPI(`?page=${page}`)
+  })
 
-  if (!boards) {
+  const boards = data?.boards || []
+  const totalBoards = data?.totalBoards || 0
+
+  if (isLoading) {
     return <PageLoadingSpinner caption="Loading Boards..." />
   }
 
