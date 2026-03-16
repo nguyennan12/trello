@@ -29,7 +29,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <PersistGate persistor={persitor}>
-          <CssVarsProvider theme={theme} >
+          <CssVarsProvider theme={theme} defaultMode="light"
+            colorSchemeSelector="class">
             <ConfirmProvider >
               <GlobalStyles styles={{
                 a: { textDecoration: 'none' }

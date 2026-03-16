@@ -32,11 +32,11 @@ function ToggleFocusInput({ value, onChangedValue, inputFontSize = '16px', ...pr
       onBlur={triggerBlur}
       {...props}
       // Magic here :D
-      sx={{
+      sx={(theme) => ({
         '& input': {
           fontSize: inputFontSize,
           fontWeight: 'bold',
-          color: 'primary.contrastText'// giống Typography
+          color: 'primary.contrastText'
         },
 
         '& .MuiOutlinedInput-root': {
@@ -49,14 +49,16 @@ function ToggleFocusInput({ value, onChangedValue, inputFontSize = '16px', ...pr
         },
 
         '& .MuiOutlinedInput-root.Mui-focused': {
-          backgroundColor: (theme) =>
-            theme.palette.mode === 'dark' ? '#33485D' : 'white'
+          backgroundColor: 'white',
+          ...theme.applyStyles('dark', {
+            backgroundColor: '#33485D'
+          })
         },
 
         '& .MuiOutlinedInput-root.Mui-focused fieldset': {
-          borderColor: (theme) => theme.palette.primary.main
+          borderColor: theme.palette.primary.main
         }
-      }}
+      })}
     />
   )
 }

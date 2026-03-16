@@ -11,6 +11,9 @@ import { useColorScheme } from '@mui/material/styles'
 
 function ModeSelect() {
   const { mode, setMode } = useColorScheme()
+
+  if (!mode) return null
+
   const handleChange = (event) => {
     const selectedMode = event.target.value
     setMode(selectedMode)

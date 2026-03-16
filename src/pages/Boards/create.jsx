@@ -23,16 +23,26 @@ const SidebarItem = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   gap: '8px',
   cursor: 'pointer',
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  backgroundColor: '#fff',
   padding: '12px 16px',
   borderRadius: '8px',
   '&:hover': {
-    backgroundColor: theme.palette.mode === 'dark' ? '#33485D' : theme.palette.grey[300]
+    backgroundColor: theme.palette.grey[300]
   },
   '&.active': {
-    color: theme.palette.mode === 'dark' ? '#90caf9' : '#0c66e4',
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#e9f2ff'
-  }
+    color: '#0c66e4',
+    backgroundColor: '#e9f2ff'
+  },
+  ...theme.applyStyles('dark', {
+    backgroundColor: '#1A2027',
+    '&:hover': {
+      backgroundColor: '#33485D'
+    },
+    '&.active': {
+      color: '#90caf9',
+      backgroundColor: '#1A2027'
+    }
+  })
 }))
 
 // BOARD_TYPES tương tự bên model phía Back-end (nếu cần dùng nhiều nơi thì hãy đưa ra file constants, không thì cứ để ở đây)
@@ -76,7 +86,7 @@ function SidebarCreateBoardModal({ afterCreatedNewBoard }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={{
+        <Box sx={(theme) => ({
           position: 'absolute',
           top: '50%',
           left: '50%',
@@ -88,8 +98,9 @@ function SidebarCreateBoardModal({ afterCreatedNewBoard }) {
           border: 'none',
           outline: 0,
           padding: '20px 30px',
-          backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1A2027' : 'white'
-        }}>
+          backgroundColor: 'white',
+          ...theme.applyStyles('dark', { backgroundColor: '#1A2027' })
+        })}>
           <Box sx={{
             position: 'absolute',
             top: '10px',
@@ -201,7 +212,7 @@ function SidebarCreateBoardModal({ afterCreatedNewBoard }) {
             </form>
           </Box>
         </Box>
-      </Modal>
+      </Modal >
     </>
   )
 }

@@ -35,18 +35,19 @@ const MENU_STYLE = {
 
 function BoardBar({ board }) {
   return (
-    <Box px={2} sx={{
+    <Box px={2} sx={(theme) => ({
       width: '100%',
-      height: (theme) => theme.trello.boardBarHeight,
+      height: theme.trello.boardBarHeight,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      boxShadow: (theme) => (theme.palette.mode === 'dark'
-        ? 'inset 0 0 4px 2px rgba(255, 255, 255, 0.1)'
-        : 'inset 0 0 4px 2px rgba(0,0,0,0.1)'),
+      boxShadow: 'inset 0 0 4px 2px rgba(0,0,0,0.1)',
       gap: 2,
-      bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#020f1f' : '')
-    }}>
+      ...theme.applyStyles('dark', {
+        boxShadow: 'inset 0 0 4px 2px rgba(255, 255, 255, 0.1)',
+        bgcolor: '#020f1f'
+      })
+    })}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
 
         <Tooltip title={board?.description}>

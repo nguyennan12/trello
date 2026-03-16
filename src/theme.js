@@ -1,13 +1,13 @@
 import { extendTheme } from '@mui/material/styles'
-//import { lightGreen } from '@mui/material/colors';
 
 const APP_BAR_HEIGHT = '58px'
 const BOARD_BAR_HEIGHT = '60px'
 const BOARD_CONTENR_HEIGHT = `calc(100vh - ${APP_BAR_HEIGHT} - ${BOARD_BAR_HEIGHT})`
 const COLUMN_HEADER_HEIGHT = '50px'
 const COLUMN_FOOTER_HEIGHT = '56px'
-// Create a theme instance.
+
 const theme = extendTheme({
+  colorSchemeSelector: 'class',
   trello: {
     appBarHeight: APP_BAR_HEIGHT,
     boardBarHeight: BOARD_BAR_HEIGHT,
@@ -15,6 +15,7 @@ const theme = extendTheme({
     columnHeaderHeight: COLUMN_HEADER_HEIGHT,
     columnFooterHeight: COLUMN_FOOTER_HEIGHT
   },
+
   colorSchemes: {
     light: {
       palette: {
@@ -26,6 +27,7 @@ const theme = extendTheme({
         }
       }
     },
+
     dark: {
       palette: {
         primary: {
@@ -37,6 +39,7 @@ const theme = extendTheme({
       }
     }
   },
+
   components: {
     MuiButton: {
       styleOverrides: {
@@ -46,13 +49,17 @@ const theme = extendTheme({
         })
       }
     },
+
     MuiTypography: {
       styleOverrides: {
         root: {
-          '&.MuiTypography-body1': { fontSize: '0.875rem' }
+          '&.MuiTypography-body1': {
+            fontSize: '0.875rem'
+          }
         }
       }
     },
+
     MuiInputLabel: {
       styleOverrides: {
         root: ({ theme }) => ({
@@ -61,24 +68,15 @@ const theme = extendTheme({
         })
       }
     },
+
     MuiOutlinedInput: {
       styleOverrides: {
-        root: ({ theme }) => ({
-          // color: theme.palette.primary.dark,
+        root: {
           fontSize: '0.875rem',
-          // '.MuiOutlinedInput-notchedOutline': {
-          //   borderColor: theme.palette.primary.contrastText
-          // },
-          // '&:hover': {
-          //   '.MuiOutlinedInput-notchedOutline': {
-          //     borderColor: theme.palette.primary.contrastText
-          //   }
-          //},
-          //khong bold vien khi nhap vao input
           '& fieldset': { borderWidth: '0.5px !important' },
           '&:hover fieldset': { borderWidth: '1px !important' },
           '&.Mui-focused fieldset': { borderWidth: '1px !important' }
-        })
+        }
       }
     }
   }
