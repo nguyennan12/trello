@@ -37,8 +37,10 @@ function AppBar() {
       gap: 2
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Link to="/boards">
+          <AppsIcon sx={{ color: 'primary.contrastText !important', verticalAlign: 'middle' }} />
+        </Link>
 
-        <AppsIcon sx={{ color: 'primary.contrastText' }} />
         <Link to="/">
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <SvgIcon component={TrelloLogo} fontSize="small" inheritViewBox sx={{ color: 'primary.contrastText' }} />
