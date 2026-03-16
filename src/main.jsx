@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline'
 import { GlobalStyles } from '@mui/material'
-import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
+import { CssVarsProvider } from '@mui/material/styles'
 import ReactDOM from 'react-dom/client'
 import App from '~/App.jsx'
 import theme from '~/theme'
@@ -29,7 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <PersistGate persistor={persitor}>
-          <CssVarsProvider theme={theme}>
+          <CssVarsProvider theme={theme} >
             <ConfirmProvider >
               <GlobalStyles styles={{
                 a: { textDecoration: 'none' }

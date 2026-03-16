@@ -22,7 +22,7 @@ import { DEFAULT_PAGE, DEFAULT_ITEMS_PER_PAGE } from '~/utils/constants'
 
 import Grid from '@mui/material/Grid'
 import { fetchBoardsAPI } from '~/apis'
-import { useQuery } from '@tanstack/react-query'
+import { useQueryClient, useQuery } from '@tanstack/react-query'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -43,6 +43,7 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 
 function Boards() {
   const location = useLocation()
+  const queryClient = useQueryClient()
   const query = new URLSearchParams(location.search)
   const page = parseInt(query.get('page') || '1', 10)
 
@@ -53,6 +54,10 @@ function Boards() {
 
   const boards = data?.boards || []
   const totalBoards = data?.totalBoards || 0
+
+  const afterCreatedNewBoard = () => {
+    queryClient.invalidateQueries({ queryKey: ['boards'] })
+  }
 
   if (isLoading) {
     return <PageLoadingSpinner caption="Loading Boards..." />
@@ -84,7 +89,7 @@ function Boards() {
             </Stack>
             <Divider sx={{ my: 1 }} />
             <Stack direction="column" spacing={1}>
-              <SidebarCreateBoardModal />
+              <SidebarCreateBoardModal afterCreatedNewBoard={afterCreatedNewBoard} />
             </Stack>
           </Grid>
 
@@ -146,7 +151,7 @@ function Boards() {
             )}
 
             {totalBoards > 0 && (
-              <Box sx={{ my: 3, pr: 5, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+              <Box sx={{ my: 3, pr: 5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Pagination
                   size="large"
                   color="secondary"

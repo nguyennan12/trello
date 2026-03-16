@@ -1,4 +1,4 @@
-import { experimental_extendTheme as extendTheme } from '@mui/material/styles'
+import { extendTheme } from '@mui/material/styles'
 //import { lightGreen } from '@mui/material/colors';
 
 const APP_BAR_HEIGHT = '58px'

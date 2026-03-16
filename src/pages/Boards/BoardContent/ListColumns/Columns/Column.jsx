@@ -24,6 +24,7 @@ import { useConfirm } from 'material-ui-confirm'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import ListCards from './ListCards/ListCards'
+import ToggleFocusInput from '~/components/Form/ToggleFocusInput'
 
 import {
   createNewCardAPI,
@@ -126,6 +127,10 @@ function Column({ column }) {
     }
   }
 
+  const onUpdateTitleColumn = () => {
+
+  }
+
   return (
     <div ref={setNodeRef}
       style={DndKitColumnStyles}
@@ -152,7 +157,10 @@ function Column({ column }) {
           justifyContent: 'space-between',
           p: 2
         }}>
-          <Typography variant='h7' sx={{ fontWeight: 'bold', color: 'primary.contrastText', cursor: 'pointer' }}>{column?.title}</Typography>
+          <ToggleFocusInput
+            value={column?.title}
+            onChangedValue={onUpdateTitleColumn}
+          />
           <Box>
             <Tooltip title="More options">
               <ExpandMoreIcon
