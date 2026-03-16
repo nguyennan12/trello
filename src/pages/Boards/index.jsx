@@ -18,16 +18,10 @@ import { Link, useLocation } from 'react-router-dom'
 import randomColor from 'randomcolor'
 import SidebarCreateBoardModal from './create'
 import { styled } from '@mui/material/styles'
+import { DEFAULT_PAGE, DEFAULT_ITEMS_PER_PAGE } from '~/utils/constants'
 
-/**
- * MUI v7: Grid v1 bị xóa hoàn toàn.
- * Grid bây giờ = Grid2 stable, dùng prop "size" cho breakpoints.
- * Docs: https://mui.com/material-ui/react-grid/
- * - KHÔNG còn prop "item" hay "container"
- * - Dùng: <Grid size={{ xs: 12, sm: 3 }}>
- * - container tự động khi có prop "spacing" hoặc "container"
- */
 import Grid from '@mui/material/Grid'
+import { fetchBoardsAPI } from '~/apis'
 
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -55,9 +49,11 @@ function Boards() {
   const page = parseInt(query.get('page') || '1', 10)
 
   useEffect(() => {
-    setBoards([...Array(16)].map((_, i) => i))
-    setTotalBoards(100)
-  }, [])
+    fetchBoardsAPI(location.search).then(res => {
+      setBoards(res.boards || [])
+      setTotalBoards(res.totalBoards || 0)
+    })
+  }, [location.search])
 
   if (!boards) {
     return <PageLoadingSpinner caption="Loading Boards..." />
@@ -108,23 +104,30 @@ function Boards() {
             {boards?.length > 0 && (
               <Grid container spacing={2}>
                 {boards.map((b) => (
-                  <Grid key={b} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                  <Grid key={b._id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
                     <Card sx={{ width: '100%' }}>
                       <Box sx={{ height: '50px', backgroundColor: randomColor() }} />
+
                       <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
                         <Typography gutterBottom variant="h6" component="div">
-                          Board title {b}
+                          {b.title}
                         </Typography>
+
                         <Typography
                           variant="body2"
                           color="text.secondary"
-                          sx={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+                          sx={{
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis'
+                          }}
                         >
-                          Mô tả ngắn gọn về board để người dùng dễ nhận diện...
+                          {b.description}
                         </Typography>
+
                         <Box
                           component={Link}
-                          to="/boards/6534e1b8a235025a66b644a5"
+                          to={`/boards/${b._id}`}
                           sx={{
                             mt: 1,
                             display: 'flex',
@@ -150,12 +153,12 @@ function Boards() {
                   color="secondary"
                   showFirstButton
                   showLastButton
-                  count={Math.ceil(totalBoards / 12)}
+                  count={Math.ceil(totalBoards / DEFAULT_ITEMS_PER_PAGE)}
                   page={page}
                   renderItem={(item) => (
                     <PaginationItem
                       component={Link}
-                      to={`/boards${item.page === 1 ? '' : `?page=${item.page}`}`}
+                      to={`/boards${item.page === DEFAULT_PAGE ? '' : `?page=${item.page}`}`}
                       {...item}
                     />
                   )}
