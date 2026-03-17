@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline'
 import { GlobalStyles } from '@mui/material'
-import { CssVarsProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import ReactDOM from 'react-dom/client'
 import App from '~/App.jsx'
 import theme from '~/theme'
@@ -29,7 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <PersistGate persistor={persitor}>
-          <CssVarsProvider theme={theme} defaultMode="light"
+          <ThemeProvider theme={theme} defaultMode="light"
             colorSchemeSelector="class">
             <ConfirmProvider >
               <GlobalStyles styles={{
@@ -39,7 +39,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <App />
               <ToastContainer autoClose={2000} theme="colored" />
             </ConfirmProvider>
-          </CssVarsProvider>
+          </ThemeProvider >
         </PersistGate>
       </QueryClientProvider>
 

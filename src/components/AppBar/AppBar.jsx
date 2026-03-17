@@ -38,7 +38,7 @@ function AppBar() {
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <Link to="/boards">
-          <AppsIcon sx={{ color: 'primary.contrastText !important', verticalAlign: 'middle' }} />
+          <AppsIcon sx={{ color: 'primary.main', verticalAlign: 'middle' }} />
         </Link>
 
         <Link to="/">
@@ -77,14 +77,14 @@ function AppBar() {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon sx={{ color: 'primary.contrastText' }} />
+                <SearchIcon />
               </InputAdornment>
             ),
             endAdornment: (
               <InputAdornment position="end">
                 <ClearIcon
                   sx={{
-                    color: searchValue ? 'primary.contrastText' : 'transparent',
+                    color: searchValue ? 'primary.contrastText !important' : 'transparent',
                     fontSize: '1rem',
                     cursor: 'pointer'
                   }}
@@ -106,12 +106,16 @@ function AppBar() {
           }} />
         <ModeSelect />
         <Tooltip title="Notifications">
-          <Badge color="secondary" variant="dot">
-            <NotificationsNoneIcon sx={{ color: 'primary.contrastText' }} />
+          <Badge color="secondary" variant="dot" sx={{
+            '& .MuiBadge-badge': {
+              backgroundColor: 'error.main' // hoặc màu bạn muốn
+            }
+          }}>
+            <NotificationsNoneIcon />
           </Badge>
         </Tooltip>
         <Tooltip title="Help">
-          <HelpOutlineIcon sx={{ color: 'primary.contrastText' }} />
+          <HelpOutlineIcon />
         </Tooltip>
         <Profiles />
       </Box>

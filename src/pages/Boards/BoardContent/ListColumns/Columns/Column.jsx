@@ -242,7 +242,7 @@ function Column({ column }) {
               justifyContent: 'space-between',
               p: 2
             }}>
-            <Button startIcon={<AddCardIcon />}>Add new card</Button>
+            <Button sx={{ color: 'primary.contrastText' }} startIcon={<AddCardIcon />}>Add new card</Button>
             <Tooltip title="Drag to move">
               <DragHandleIcon sx={{ color: 'primary.contrastText', cursor: 'pointer' }} />
             </Tooltip>
